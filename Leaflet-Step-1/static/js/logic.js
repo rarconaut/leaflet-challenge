@@ -14,6 +14,8 @@ function createFeatures(earthquakeData) {
     // Define a function we want to run once for each feature in the features array
     // Give each feature a popup describing the place, magnitude, power, tsunami status
     // and time of the earthquake
+
+    // Tsunami status function
     function tsunami(feature) {
         // console.log(feature.properties.tsunami);
         if (feature.properties.tsunami = 0) {
@@ -37,7 +39,25 @@ function createFeatures(earthquakeData) {
 
     // Create a GeoJSON layer containing the features array on the earthquakeData object
     // Run the onEachFeature function once for each piece of data in the array
+    var geojsonMarkerOptions = {
+        radius: 8,
+        fillColor: "#ff7800",
+        color: "#000",
+        weight: 1,
+        opacity: 1,
+        fillOpacity: 0.8
+    };
+    
+    // L.geoJSON(someGeojsonFeature, {
+    //     pointToLayer: function (feature, latlng) {
+    //         return L.circleMarker(latlng, geojsonMarkerOptions);
+    //     }
+    // }).addTo(map);
+
     var earthquakes = L.geoJSON(earthquakeData, {
+        pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng, geojsonMarkerOptions);
+        },
         onEachFeature: onEachFeature
     });
 
