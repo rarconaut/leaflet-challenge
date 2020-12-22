@@ -12,8 +12,17 @@ d3.json(queryUrl, function (data) {
 function createFeatures(earthquakeData) {
 
     // Define a function we want to run once for each feature in the features array
-    // Give each feature a popup describing the place, magnitude, power, tsunami status
+    // Give each feature a popup describing the place, magnitude, rms-power, tsunami status,
     // and time of the earthquake
+    function markerSize(feature) {
+        console.log(feature.properties.mag);
+        return feature.properties.mag + 10;
+    };
+
+    function markerColor(feature) {
+        console.log(feature.properties.mag + 1)
+        return 1 - (1 / feature.properties.mag);
+    };
 
     // Tsunami status function
     function tsunami(feature) {
@@ -31,23 +40,24 @@ function createFeatures(earthquakeData) {
             `<h3> ${feature.properties.place} </h3>`
             + `<hr><p> 
                 Magnitude: ${feature.properties.mag} 
-                <br>RMS: ${feature.properties.rms}` 
-                + "<br>Tsunami: " + tsunami(feature) + "</p>"
+                <br>RMS: ${feature.properties.rms}`
+            + "<br>Tsunami: " + tsunami(feature) + "</p>"
             + `<hr><p> ${new Date(feature.properties.time)} </p>`
         );
     };
 
     // Create a GeoJSON layer containing the features array on the earthquakeData object
     // Run the onEachFeature function once for each piece of data in the array
-    var geojsonMarkerOptions = {
-        radius: 8,
-        fillColor: "#ff7800",
-        color: "#000",
-        weight: 1,
-        opacity: 1,
-        fillOpacity: 0.8
-    };
-    
+
+    // var geojsonMarkerOptions = {
+    //     radius: markerSize(feature),
+    //     fillColor: "#ff7800",
+    //     color: "#000",
+    //     weight: 1,
+    //     opacity: 1,
+    //     fillOpacity: markerColor(feature)
+    // };
+
     // L.geoJSON(someGeojsonFeature, {
     //     pointToLayer: function (feature, latlng) {
     //         return L.circleMarker(latlng, geojsonMarkerOptions);
@@ -56,7 +66,14 @@ function createFeatures(earthquakeData) {
 
     var earthquakes = L.geoJSON(earthquakeData, {
         pointToLayer: function (feature, latlng) {
-            return L.circleMarker(latlng, geojsonMarkerOptions);
+            return L.circleMarker(latlng, {
+                radius: markerSize(feature),
+                fillColor: "#ff7800",
+                color: "#000",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: markerColor(feature)
+            });
         },
         onEachFeature: onEachFeature
     });
@@ -110,4 +127,28 @@ function createMap(earthquakes) {
     L.control.layers(baseMaps, overlayMaps, {
         collapsed: false
     }).addTo(myMap);
+
+    var info = L.control({
+        position: "bottomleft"
+    });
+
+    // When the layer control is added, insert a div with the class of "legend"
+    info.onAdd = function () {
+        var div = L.DomUtil.create("div", "legend");
+        return div;
+    };
+
+    info.addTo(myMap);
+
+    // Call the updateLegend function to update the legend
+    var updatedAt = earthquakeData.metadata.generated;
+    updateLegend(updatedAt);
+}
+
+
+// Update the legend's innerHTML with the last updated time and station count
+function updateLegend(updatedAt) {
+    document.querySelector(".legend").innerHTML = [
+        "<p>Updated: " + new Date(updatedAt) + "</p>",
+    ].join("");
 }
