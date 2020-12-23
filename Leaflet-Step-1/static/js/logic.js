@@ -66,6 +66,7 @@ function createFeatures(earthquakeData) {
 
     var earthquakes = L.geoJSON(earthquakeData, {
         pointToLayer: function (feature, latlng) {
+            // geojsonMarkerOptions
             return L.circleMarker(latlng, {
                 radius: markerSize(feature),
                 fillColor: "#ff7800",
@@ -128,28 +129,28 @@ function createMap(earthquakes) {
         collapsed: false
     }).addTo(myMap);
 
-    var info = L.control({
-        position: "bottomleft"
-    });
+//     var info = L.control({
+//         position: "bottomleft"
+//     });
 
-    // When the layer control is added, insert a div with the class of "legend"
-    info.onAdd = function () {
-        var div = L.DomUtil.create("div", "legend");
-        return div;
-    };
+//     // When the layer control is added, insert a div with the class of "legend"
+//     info.onAdd = function () {
+//         var div = L.DomUtil.create("div", "legend");
+//         return div;
+//     };
 
-    info.addTo(myMap);
+//     info.addTo(myMap);
 
-    // Call the updateLegend function to update the legend
-    var updatedAt = data.features.metadata.generated;
+//     // Call the updateLegend function to update the legend
+//     var updatedAt = data.features.metadata.generated;
     
-    updateLegend(updatedAt);
-}
+//     updateLegend(updatedAt);
+// }
 
 
-// Update the legend's innerHTML with the last updated time and station count
-function updateLegend(updatedAt) {
-    document.querySelector(".legend").innerHTML = [
-        "<p>Updated: " + new Date(updatedAt) + "</p>",
-    ].join("");
+// // Update the legend's innerHTML with the last updated time and station count
+// function updateLegend(updatedAt) {
+//     document.querySelector(".legend").innerHTML = [
+//         "<p>Updated: " + new Date(updatedAt) + "</p>",
+//     ].join("");
 }
