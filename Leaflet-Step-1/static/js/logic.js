@@ -141,7 +141,8 @@ function createMap(earthquakes) {
     info.addTo(myMap);
 
     // Call the updateLegend function to update the legend
-    var updatedAt = earthquakeData.metadata.generated;
+    var updatedAt = data.features.metadata.generated;
+    
     updateLegend(updatedAt);
 }
 
