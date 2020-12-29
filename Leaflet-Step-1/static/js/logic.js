@@ -28,12 +28,14 @@ function createFeatures(earthquakeData) {
     // Tsunami status function
     function tsunami(feature) {
         // console.log(feature.properties.tsunami);
-        if (feature.properties.tsunami = 0) {
-            return "None";
-        }
-        else {
-            return "Yes";
-        };
+        // if (feature.properties.tsunami = 0) {
+        //     return "None";
+        // }
+        // else {
+        //     return "Yes";
+        // };
+        return feature == 0 ? 'None' :
+                "Yes"; 
     }
 
     function onEachFeature(feature, layer) {
@@ -42,7 +44,7 @@ function createFeatures(earthquakeData) {
             + `<hr><p> 
                 Magnitude: ${feature.properties.mag} 
                 <br>RMS: ${feature.properties.rms}`
-            + "<br>Tsunami: " + tsunami(feature) + "</p>"
+            + "<br>Tsunami: " + tsunami(feature.properties.tsunami) + "</p>"
             + `<hr><p> ${new Date(feature.properties.time)} </p>`
         );
     };
@@ -128,28 +130,28 @@ function createMap(earthquakes) {
         collapsed: false
     }).addTo(myMap);
 
-//     var info = L.control({
-//         position: "bottomleft"
-//     });
+    //     var info = L.control({
+    //         position: "bottomleft"
+    //     });
 
-//     // When the layer control is added, insert a div with the class of "legend"
-//     info.onAdd = function () {
-//         var div = L.DomUtil.create("div", "legend");
-//         return div;
-//     };
+    //     // When the layer control is added, insert a div with the class of "legend"
+    //     info.onAdd = function () {
+    //         var div = L.DomUtil.create("div", "legend");
+    //         return div;
+    //     };
 
-//     info.addTo(myMap);
+    //     info.addTo(myMap);
 
-//     // Call the updateLegend function to update the legend
-//     var updatedAt = data.features.metadata.generated;
-    
-//     updateLegend(updatedAt);
-// }
+    //     // Call the updateLegend function to update the legend
+    //     var updatedAt = data.features.metadata.generated;
+
+    //     updateLegend(updatedAt);
+    // }
 
 
-// // Update the legend's innerHTML with the last updated time and station count
-// function updateLegend(updatedAt) {
-//     document.querySelector(".legend").innerHTML = [
-//         "<p>Updated: " + new Date(updatedAt) + "</p>",
-//     ].join("");
+    // // Update the legend's innerHTML with the last updated time and station count
+    // function updateLegend(updatedAt) {
+    //     document.querySelector(".legend").innerHTML = [
+    //         "<p>Updated: " + new Date(updatedAt) + "</p>",
+    //     ].join("");
 };
