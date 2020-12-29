@@ -16,13 +16,16 @@ function createFeatures(earthquakeData) {
     // Give each feature a popup describing the place, magnitude, rms-power, tsunami status,
     // and time of the earthquake
     function markerSize(feature) {
-        console.log(feature.properties.mag);
-        return feature.properties.mag + 10;
+        console.log(feature);
+        return feature ** 1.75;
     };
 
     function markerColor(feature) {
-        console.log(feature.properties.mag + 1)
-        return 1 - (1 / feature.properties.mag);
+        console.log(feature)
+        return feature >= 4 & feature < 5 ? 'yellow' :
+                feature >= 5 & feature < 6 ? 'orange' :
+                feature >= 6 ? 'red' :
+                "white";
     };
 
     // Tsunami status function
@@ -71,12 +74,10 @@ function createFeatures(earthquakeData) {
         pointToLayer: function (feature, latlng) {
             // geojsonMarkerOptions
             return L.circleMarker(latlng, {
-                radius: markerSize(feature),
-                fillColor: "#ff7800",
-                color: "#000",
+                radius: markerSize(feature.properties.mag),
+                fillColor: markerColor(feature.properties.mag),
                 weight: 1,
-                opacity: 1,
-                fillOpacity: markerColor(feature)
+                fillOpacity: .75
             });
         },
         onEachFeature: onEachFeature
