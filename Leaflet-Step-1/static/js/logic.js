@@ -23,9 +23,9 @@ function createFeatures(earthquakeData) {
     function markerColor(feature) {
         console.log(feature)
         return feature >= 4 & feature < 5 ? 'yellow' :
-                feature >= 5 & feature < 6 ? 'orange' :
+            feature >= 5 & feature < 6 ? 'orange' :
                 feature >= 6 ? 'red' :
-                "white";
+                    "white";
     };
 
     // Tsunami status function
@@ -38,7 +38,7 @@ function createFeatures(earthquakeData) {
         //     return "Yes";
         // };
         return feature == 0 ? 'None' :
-                "Yes"; 
+            "Yes";
     }
 
     function onEachFeature(feature, layer) {
@@ -131,28 +131,58 @@ function createMap(earthquakes) {
         collapsed: false
     }).addTo(myMap);
 
-    //     var info = L.control({
-    //         position: "bottomleft"
-    //     });
+        var legend = L.control({
+            position: "bottomleft"
+        });
 
-    //     // When the layer control is added, insert a div with the class of "legend"
-    //     info.onAdd = function () {
-    //         var div = L.DomUtil.create("div", "legend");
-    //         return div;
-    //     };
+        // When the layer control is added, insert a div with the class of "legend"
+        legend.onAdd = function () {
+            var div = L.DomUtil.create("div", "legend");
+            return div;
+        };
 
-    //     info.addTo(myMap);
+        legend.addTo(myMap);
 
-    //     // Call the updateLegend function to update the legend
-    //     var updatedAt = data.features.metadata.generated;
+        // Call the updateLegend function to update the legend
+        var updatedAt = data.features.metadata.generated;
 
-    //     updateLegend(updatedAt);
-    // }
+        updateLegend(updatedAt);
+    }
 
 
-    // // Update the legend's innerHTML with the last updated time and station count
-    // function updateLegend(updatedAt) {
-    //     document.querySelector(".legend").innerHTML = [
-    //         "<p>Updated: " + new Date(updatedAt) + "</p>",
-    //     ].join("");
+    // Update the legend's innerHTML with the last updated time and station count
+    function updateLegend(updatedAt) {
+        document.querySelector(".legend").innerHTML = [
+            '<p><strong>Magnitude</strong></p>' 
+            +'<i class="circle" style="background:white"></i>' + "<p> <4 </p>"
+            +"<p>Updated: " + new Date(updatedAt) + "</p>",
+        ].join("");
+
+
+
+
+    // var legend = L.control({ position: 'bottomleft' });
+    // legend.onAdd = function () {
+    //     var div = L.DomUtil.create('div', 'legend');
+    //     labels = ['<strong>Magnitude</strong>'],
+    //         categories = ['<4', '4-5', '5-6', '6+'];
+    //     legendColors = ['white', 'yellow', 'orange', 'red']
+
+    //     for (var i = 0; i < categories.length; i++) {
+
+    //         div.innerHTML +=
+    //             labels.push(
+    //                 '<i class="circle" style="background:' + legendColors[i] + '"></i> '
+    //             );
+
+    //     }
+    //     div.innerHTML = labels.join('<br>');
+    //     return div;
+    // };
+    // legend.addTo(map);
 };
+
+// feature >= 4 & feature < 5 ? 'yellow' :
+//     feature >= 5 & feature < 6 ? 'orange' :
+//         feature >= 6 ? 'red' :
+//             "white";
