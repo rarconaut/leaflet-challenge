@@ -83,7 +83,7 @@ function createFeatures(earthquakeData) {
     createMap(earthquakes);
 }
 
-function createMap(earthquakes) {
+function createMap(earthquakes, hourlyEarthquakes) {
 
     // Define streetmap and darkmap layers
     var satellitemap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
@@ -110,14 +110,13 @@ function createMap(earthquakes) {
 
     // Create overlay object to hold our overlay layer
     var overlayMaps = {
-        Earthquakes: earthquakes
+        "Significant Earthquakes (30 Day)": earthquakes,
+        "All Earthquakes (Hourly)": hourlyEarthquakes
     };
 
     // Create our map, giving it the streetmap and earthquakes layers to display on load
     var myMap = L.map("map", {
-        center: [
-            21.30, -12.82
-        ],
+        center: [21.30, -12.82],
         zoom: 1.5,
         layers: [satellitemap, earthquakes]
     });
@@ -153,4 +152,50 @@ function createMap(earthquakes) {
 //     document.querySelector(".legend").innerHTML = [
 //         "<p>Updated: " + new Date(updatedAt) + "</p>",
 //     ].join("");
-}
+};
+
+
+var hourlyQueryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson";
+
+// Perform a GET request to the query URL
+d3.json(hourlyQueryUrl, function (data) {
+    // Once we get a response, send the data.features object to the createFeatures function
+    createFeatures2(data.features);
+});
+
+function createFeatures2(hourlyEarthquakeData) {
+
+    // Define a function we want to run once for each feature in the features array  
+
+    function onEachFeature(feature, layer) {
+        layer.bindPopup(
+            `<h3> ${feature.properties.place} </h3>`
+            + `<hr><p> 
+                Magnitude: ${feature.properties.mag}`
+            + `<hr><p> ${new Date(feature.properties.time)} </p>`
+        );
+    };
+
+    // Create a GeoJSON layer containing the features array on the earthquakeData object
+    // Run the onEachFeature function once for each piece of data in the array
+
+    var geojsonMarkerOptions = {
+        radius: 10
+    };
+
+    // L.geoJSON(someGeojsonFeature, {
+    //     pointToLayer: function (feature, latlng) {
+    //         return L.circleMarker(latlng, geojsonMarkerOptions);
+    //     }
+    // }).addTo(map);
+
+    var hourlyEarthquakes = L.geoJSON(hourlyEarthquakeData, {
+        pointToLayer: function (feature, latlng) {  
+            return L.circleMarker(latlng, geojsonMarkerOptions);
+        },
+        onEachFeature: onEachFeature
+    });
+
+    // Sending our earthquakes layer to the createMap function
+    createMap(hourlyEarthquakes);
+};
